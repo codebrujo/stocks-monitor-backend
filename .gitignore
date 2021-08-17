@@ -1,0 +1,11 @@
+node_modules
+dist
+build
+coverage
+.env
+combined.log
+src/backend/config/sequelize-cli/config.json
+src/frontend/env.js
+error.log
+cli/test.js
+ts/src/frontend/env.js
