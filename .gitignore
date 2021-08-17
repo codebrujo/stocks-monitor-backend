@@ -9,3 +9,4 @@ src/frontend/env.js
 error.log
 cli/test.js
 ts/src/frontend/env.js
+src/config/sequelize-cli/config.json
