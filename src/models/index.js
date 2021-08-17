@@ -2,8 +2,8 @@ const Sequelize = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
-const { pgConfig } = require('../../config/constants');
-const logger = require('../../config/logger');
+const { pgConfig } = require('../config/constants');
+const logger = require('../config/logger');
 const APIError = require('../utils/APIError');
 
 const db = {};

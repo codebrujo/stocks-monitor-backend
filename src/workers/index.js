@@ -130,10 +130,9 @@ const createWorker = (file, ref) => {
 
 function startWorkers() {
     fs.readdirSync(workersDir)
-        .filter((file) => (file.indexOf('.js') !== 0) && (file.indexOf('.map') === -1) && (file !== 'index.js'))
-        // import model files and save model names
+        .filter((file) => (file.indexOf('.js') !== -1) && (file.indexOf('.map') === -1) && (file !== 'index.js'))
+        // start workers listed at workersDir
         .forEach((file) => {
-
             createWorker(file);
         });
 }

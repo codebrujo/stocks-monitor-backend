@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
-const db = require('../models');
-const APIError = require('../utils/APIError');
+const db = require('../../models');
+const APIError = require('../../utils/APIError');
 
 const { User } = db;
 

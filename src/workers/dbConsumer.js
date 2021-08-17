@@ -1,10 +1,10 @@
 const { workerData, parentPort } = require('worker_threads');
 const logger = require('../config/logger');
 const { EXTERNAL_CONSUMER_ID } = require('../config/constants').workersConfig;
-const { getPrecision } = require('../../api/utils/helpers');
+const { getPrecision } = require('../utils/helpers');
 const moment = require('moment');
 
-const db = require('../../api/models');
+const db = require('../models');
 const {
     Currency,
     CurrencyRate,

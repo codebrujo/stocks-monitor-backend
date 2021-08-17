@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const httpStatus = require('http-status');
 const moment = require('moment-timezone');
 const jwt = require('jwt-simple');
-const { env, jwtSecret, jwtExpirationInterval } = require('../../config/constants');
-const logger = require('../../config/logger');
+const { env, jwtSecret, jwtExpirationInterval } = require('../config/constants');
+const logger = require('../config/logger');
 const APIError = require('../utils/APIError');
 /**
  * User Roles

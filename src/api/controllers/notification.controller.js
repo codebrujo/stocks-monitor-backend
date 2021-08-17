@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const logger = require('../../config/logger');
 
-const db = require('../models');
+const db = require('../../models');
 const { Stock, Notification, Sequelize } = db;
 const { eq } = Sequelize.Op;
 

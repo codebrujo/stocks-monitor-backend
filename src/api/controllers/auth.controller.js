@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const db = require('../models');
+const db = require('../../models');
 const moment = require('moment');
 const { jwtExpirationInterval } = require('../../config/constants');
 const { omit } = require('lodash');

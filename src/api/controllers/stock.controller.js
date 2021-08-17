@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
 const moment = require('moment');
-const db = require('../models');
+const db = require('../../models');
 
 const { Stock, Company, Notification, Sequelize } = db;
 const logger = require('../../config/logger');
-const { getPrecision } = require('../../api/utils/helpers');
+const { getPrecision } = require('../../utils/helpers');
 const { eq } = Sequelize.Op;
 
 /**
