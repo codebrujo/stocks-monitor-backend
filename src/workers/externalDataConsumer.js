@@ -22,7 +22,8 @@ const notifyUser = async(payload) => {
  * Current thread message processor
  * @private
  */
-const processMessageLocally = async(msg) => {
+const processMessageLocally = async (msg) => {
+    console.log('externalDataConsumer.worker processMessageLocally' + JSON.stringify(msg));
     switch (msg.type) {
         case 'notifyUser':
             notifyUser(msg.data);
@@ -52,6 +53,4 @@ parentPort.on('message', (msg) => {
         logger.info(`${LOCAL_INSTANCE_ID}: ${msg}`);
     }
 });
-parentPort.postMessage(`Worker ${LOCAL_INSTANCE_ID} started`);
-
 parentPort.postMessage(`Worker ${LOCAL_INSTANCE_ID} started`);

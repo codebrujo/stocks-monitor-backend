@@ -18,6 +18,7 @@ const sequelizeOptions = {
         min: 0,
         idle: 10000,
     },
+    logging: false,
 };
 const sequelize = new Sequelize(
     pgConfig.db,

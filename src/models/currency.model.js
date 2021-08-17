@@ -41,7 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     Currency.associate = models => {
-        Currency.hasMany(models.CurrencyRate);
+      Currency.hasMany(models.CurrencyRate);
+      Currency.hasMany(models.Stock);
     };
 
     return Currency;

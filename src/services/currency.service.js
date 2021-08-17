@@ -20,9 +20,7 @@ const fetchData = async () => {
   })
     .then(function (response) {
       sendMessage(DB_CONSUMER_ID, 'writeCurrencyRates', currencies.map((item) => {
-        const rate = response.data.Valute[item.charCode] ? response.data.Valute[item.charCode].Value : 1;
-        const nominal = response.data.Valute[item.charCode] ? response.data.Valute[item.charCode].Nominal : 1;
-        return ({ id: item.id, rate, nominal });
+        return ({ id: item.id, rate: response.data.Valute[item.charCode].Value, nominal: response.data.Valute[item.charCode].Nominal });
       }));
     })
     .catch(function (error) {
@@ -37,23 +35,6 @@ const fetchData = async () => {
  */
 exports.handleCurrencyArrayUpdate = (arr) => {
   currencies = arr;
-  if (currencies.length === 0) {
-    sendMessage(DB_CONSUMER_ID, 'initCurrenciesList', [
-      {
-        charCode: "RUB",
-        numCode: "643",
-        name: "Рубль РФ",
-      },
-      {
-        charCode: "USD",
-        numCode: "840",
-        name: "Доллар США",
-      },
-    ]);
-    setTimeout(() => {
-      sendMessage(DB_CONSUMER_ID, 'getCurrenciesList', '');
-    }, 500);
-  }
 };
 
 /**

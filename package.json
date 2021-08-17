@@ -11,6 +11,7 @@
         "migrate": "npm run configureMigrations && sequelize-cli db:migrate",
         "exec": "node ./src/index.js",
         "devsrv": "cross-env NODE_ENV=development npm run migrate && nodemon --watch . ./src/index.js",
+        "debug": "cross-env NODE_ENV=development npm run migrate && nodemon --inspect --watch . ./src/index.js",
         "server": "cross-env NODE_ENV=production npm run migrate && npm run exec"
     },
     "author": "Sergei Ogarkov",

@@ -6,7 +6,8 @@ const StockPrice = require('./components/stockPrice');
 const StockHistory = require('./components/stockHistory');
 const StockList = require('./components/stockList');
 
-const sendMessage = async(recepient, type, data) => {
+const sendMessage = async (recepient, type, data) => {
+    // console.log(`externalDataProducer.worker sendMessage ${type}: ${recepient} ${JSON.stringify(data)}`);
     parentPort.postMessage({
         recepient,
         type,
@@ -18,13 +19,15 @@ const sendMessage = async(recepient, type, data) => {
  * Current thread message processor
  * @private
  */
-const processMessageLocally = async(msg) => {
+const processMessageLocally = async (msg) => {
+    // console.log('externalDataProducer.worker processMessageLocally' + JSON.stringify(msg));
     switch (msg.type) {
         case 'currenciesList':
             Currency.handleCurrencyArrayUpdate(msg.data);
             break;
         case 'stockList':
             StockHistory.handleStockArrayUpdate(msg.data);
+            StockList.setStocks(msg.data.list);
             break;
         case 'requestHistory':
             StockHistory.requestHistory(msg.data);
@@ -32,11 +35,17 @@ const processMessageLocally = async(msg) => {
         case 'initHistoryData':
             StockHistory.initHistoryData();
             break;
-
+        default:
+            logger.info(`${LOCAL_INSTANCE_ID} unhandled message: 
+            From: ${msg.sender} 
+            To: ${msg.recepient} 
+            Type: ${msg.type} 
+            Data: ${JSON.stringify(msg.data)} 
+            Timestamp: ${msg.timestamp}`);
     }
 };
 
-// Init components to setup regular tasks and shared variable 'sendMessage'
+// Init components to setup regular tasks and inject 'sendMessage'
 Currency.init(sendMessage);
 StockPrice.init(sendMessage);
 StockHistory.init(sendMessage);
