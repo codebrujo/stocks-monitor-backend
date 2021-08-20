@@ -2,6 +2,7 @@ const {
   WRK_STOCK_MARKET_LIST,
   WRK_STOCK_CANDLES,
   WRK_PRICE_PATH,
+  WRK_INFO_PATH,
   WRK_STOCK_HISTORY_PATH,
 } = require('../config/constants').workersConfig;
 const axios = require('axios');
@@ -92,11 +93,11 @@ exports.getStocksList = async (force) => {
   return list;
 };
 
-exports.fetchPrice = async () => {
+exports.fetchStocksInfo = async () => {
   try {
     const response = await axios({
       method: 'get',
-      url: WRK_PRICE_PATH,
+      url: WRK_INFO_PATH,
     });
     return await response.data.securities.data.map((item) => {
       return ({
@@ -104,6 +105,23 @@ exports.fetchPrice = async () => {
         price: parseFloat(item[1]),
         multiplier: item[2],
         prevprice: item[3],
+      });
+    });
+  } catch (error) {
+    logger.error(`[moex.service.fetchStockPrice] error ${error}`);
+  }
+}
+
+exports.fetchPrice = async () => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: WRK_PRICE_PATH,
+    });
+    return await response.data.marketdata.data.map((item) => {
+      return ({
+        ticker: item[0],
+        price: parseFloat(item[1]),
       });
     });
   } catch (error) {

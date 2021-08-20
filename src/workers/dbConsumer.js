@@ -91,6 +91,25 @@ const getNotifications = async (payload) => {
 
 };
 
+const updateStockPrice = async (payload) => {
+  const processedList = [];
+  const stocks = await Stock.findAll();
+  stocks.forEach(element => {
+    const value = payload.find(item => item.ticker === element.dataValues.ticker);
+    const prevprice = element.price;
+    if (value && parseFloat(prevprice) !== value.price) {
+      element.price = value.price;
+      element.save();
+      //values: ['TRADEDATE','OPEN','LOW','HIGH','CLOSE','VOLUME','VALUE']
+      updateStockHistory({
+        ticker: element.ticker,
+        values: [moment(), value.price, value.price, value.price, value.price, 0, 0],
+      });
+      processedList.push({ prevprice, price: value.price, StockId: element.id });
+    }
+  });
+  getNotifications(processedList);
+};
 
 const updateStockInfo = async (payload) => {
   const processedList = [];
@@ -109,7 +128,6 @@ const updateStockInfo = async (payload) => {
       processedList.push({ ...value, StockId: element.id });
     }
   });
-  getNotifications(processedList);
 };
 
 const getStockList = async (recepientId) => {
@@ -308,6 +326,9 @@ const processMessageLocally = async (msg) => {
       break;
     case 'initCurrenciesList':
       initCurrenciesList(msg.data);
+      break;
+    case 'updateStockPrice':
+      updateStockPrice(msg.data);
       break;
     default:
       logger.info(`${LOCAL_INSTANCE_ID} unhandled message: 

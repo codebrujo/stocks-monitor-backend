@@ -37,6 +37,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      volatility: {
+        type: Sequelize.DECIMAL(18, 6),
+        allowNull: true
+      },
       link: {
         type: Sequelize.STRING(1024),
         allowNull: false

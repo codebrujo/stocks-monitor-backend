@@ -1,7 +1,7 @@
-const { DB_CONSUMER_ID, WRK_STOCKPRICE_SCHEDULE } = require('../../config/constants').workersConfig;
+const { DB_CONSUMER_ID, WRK_STOCKPRICE_SCHEDULE, WRK_STOCKINFO_SCHEDULE } = require('../../config/constants').workersConfig;
 const logger = require('../../config/logger');
 const CronJob = require('cron').CronJob;
-const { fetchPrice } = require('../../services/moex.service');
+const { fetchPrice, fetchStocksInfo } = require('../../services/moex.service');
 
 let sendMessage;
 const isInitialized = () => {
@@ -13,10 +13,21 @@ const requestPrice = async () => {
     logger.error('requestPrice: component must be initialized first');
     return;
   }
-  sendMessage(DB_CONSUMER_ID, 'updateStockInfo', await fetchPrice());
+  const res = await fetchPrice();
+  sendMessage(DB_CONSUMER_ID, 'updateStockPrice', res);
+};
+
+const requestInfo = async () => {
+  if (!isInitialized()) {
+    logger.error('requestPrice: component must be initialized first');
+    return;
+  }
+  sendMessage(DB_CONSUMER_ID, 'updateStockInfo', await fetchStocksInfo());
 };
 
 exports.requestPrice = requestPrice;
+
+exports.requestInfo = requestInfo;
 
 /**
  * Set regular and one-time tasks
@@ -30,7 +41,9 @@ exports.init = async (sendMsg) => {
   }, null, true, 'Europe/Moscow');
   job.start();
 
-  setTimeout(() => {
-    requestPrice();
-  }, 2000);
+  const jobInfo = new CronJob(WRK_STOCKINFO_SCHEDULE, function () {
+    requestInfo();
+  }, null, true, 'Europe/Moscow');
+  jobInfo.start();
+
 };

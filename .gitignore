@@ -10,3 +10,5 @@ error.log
 cli/test.js
 ts/src/frontend/env.js
 src/config/sequelize-cli/config.json
+src/security/cert.key
+src/security/cert.pem

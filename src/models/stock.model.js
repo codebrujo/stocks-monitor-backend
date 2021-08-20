@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    volatility: {
+      type: DataTypes.DECIMAL(18, 6),
+      allowNull: true
+    },
     link: {
       type: DataTypes.STRING(1024),
       allowNull: false

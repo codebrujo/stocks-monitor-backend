@@ -41,10 +41,12 @@ app.use(cors());
 app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
 
-app.use(express.static('./dist'));
-
 // mount api v1 routes
 app.use('/api/v1', routesV1);
+
+app.use(express.static('./public'));
+
+app.use(['/portfolio', '/stocks', '/profile'], express.static('./public'));
 
 // if error is not an instanceOf APIError, convert it.
 app.use(error.converter);
