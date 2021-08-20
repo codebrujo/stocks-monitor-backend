@@ -120,6 +120,27 @@ module.exports = (sequelize, DataTypes) => {
         return res.dataValues.total ? parseFloat(res.dataValues.total) : 0;
     };
 
+    PortfolioItem.getUserStockDetails = async (id) => {
+        const { Stock, User } = PortfolioItem.sequelize.models;
+        let res = await PortfolioItem.findOne({
+            where: {
+                id,
+            },
+            include: [
+                {
+                    model: Stock,
+                    required: true,
+                },
+                {
+                    model: User,
+                    required: true,
+                },
+            ],
+
+        });
+        return res;
+    };
+
     PortfolioItem.decreaseItem = async(payload, user, refItem) => {
         const { PortfolioMovement } = PortfolioItem.sequelize.models;
         let toWithdraw = payload.quantity;

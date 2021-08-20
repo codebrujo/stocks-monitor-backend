@@ -2,6 +2,7 @@ const { workerData, parentPort } = require('worker_threads');
 const logger = require('../config/logger');
 const { EXTERNAL_CONSUMER_ID } = require('../config/constants').workersConfig;
 const { getPrecision } = require('../utils/helpers');
+const { getHighPrice, getLowPrice } = require('./components/notifications');
 const moment = require('moment');
 
 const db = require('../models');
@@ -68,6 +69,11 @@ const notifyUser = async (message, UserId) => {
   }
 };
 
+
+const createNotifications = async () => {
+  
+}
+
 const getNotifications = async (payload) => {
   const notifications = await Notification.findAll();
   notifications.forEach(element => {
@@ -76,16 +82,20 @@ const getNotifications = async (payload) => {
     if (value) {
       //если произошло увеличение цены и новая цена превышает верхнюю границу уведомления
       if (value.price > value.prevprice && value.price >= element.dataValues.highPrice) {
-        message = `Цена ${value.ticker} превысила ${element.dataValues.highPrice}`;
+        message = `${value.ticker} UP TO ${element.dataValues.highPrice}`;
         //или произошло уменьшение цены и новая цена ниже нижней границы уведомления
       } else if (value.price < value.prevprice && value.price <= element.dataValues.lowPrice) {
-        message = `Цена ${value.ticker} опустилась ниже ${element.dataValues.lowPrice}`;
+        message = `${value.ticker} DOWN TO ${element.dataValues.lowPrice}`;
       }
     }
     //отправляем уведомление пользователю и удаляем оповещение
     if (message) {
       notifyUser(message, element.UserId);
-      Notification.deleteItem(element.id);
+      const payload = {
+        highPrice: getHighPrice(value.price, value.stock),
+        lowPrice: getLowPrice(value.price, value.stock),
+      }
+      Notification.addItem(payload, { id: element.UserId }, value.stock)
     }
   });
 
@@ -105,7 +115,7 @@ const updateStockPrice = async (payload) => {
         ticker: element.ticker,
         values: [moment(), value.price, value.price, value.price, value.price, 0, 0],
       });
-      processedList.push({ prevprice, price: value.price, StockId: element.id });
+      processedList.push({ prevprice, price: value.price, StockId: element.id, stock: element });
     }
   });
   getNotifications(processedList);
