@@ -1,0 +1,17 @@
+version: "3"
+services:
+  backend:
+    env_file:
+      - ./src/.env
+    container_name: sms
+    restart: always
+    build: .
+    healthcheck:
+      test: [ "CMD", "curl", "127.0.0.1:8080/api/v1/status" ]
+      interval: 5s
+      retries: 5
+    ports:
+      - "3001:8080"
+    command: npm run server
+    volumes:
+      - .:/opt/stock-monitor-service-backend
