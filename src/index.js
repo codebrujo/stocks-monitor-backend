@@ -9,7 +9,11 @@ const app = require('./config/express');
 
 if (env === 'production') {
   // listen to requests
-  app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
+  app.listen(port, () => {
+    const msg = `server started on port ${port} (${env})`;
+    logger.info(msg)
+    console.log(msg);
+  });
 } else {
   const httpsOptions = {
     key: fs.readFileSync('./src/security/cert.key'),
