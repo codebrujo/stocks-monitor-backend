@@ -6,17 +6,20 @@ const { port, env } = require('./config/constants');
 const logger = require('./config/logger');
 const app = require('./config/express');
 
-// listen to requests
-// app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
 
-const httpsOptions = {
-  key: fs.readFileSync('./src/security/cert.key'),
-  cert: fs.readFileSync('./src/security/cert.pem')
+if (env === 'production') {
+  // listen to requests
+  app.listen(port, () => logger.info(`server started on port ${port} (${env})`));
+} else {
+  const httpsOptions = {
+    key: fs.readFileSync('./src/security/cert.key'),
+    cert: fs.readFileSync('./src/security/cert.pem')
+  }
+  https.createServer(httpsOptions, app)
+    .listen(port, () => {
+      logger.info(`server started on port ${port} (${env})`);
+    });
 }
-https.createServer(httpsOptions, app)
-  .listen(port, () => {
-    logger.info(`server started on port ${port} (${env})`);
-  });
 
 require('./workers');
 
