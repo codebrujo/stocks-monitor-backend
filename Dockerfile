@@ -8,6 +8,6 @@ WORKDIR /home/node/stock-monitor-service-backend
 
 RUN npm ci
 
-EXPOSE 3001
+EXPOSE 8080
 
 CMD ["npm", "run", "server"]
