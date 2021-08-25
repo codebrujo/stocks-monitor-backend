@@ -10,7 +10,7 @@ const app = require('./config/express');
 if (env === 'production') {
   // listen to requests
   app.listen(port, () => {
-    const msg = `server started on port ${port} (${env})`;
+    const msg = `server started on port ${port} (http) (${env})`;
     logger.info(msg)
     console.log(msg);
   });
@@ -21,7 +21,9 @@ if (env === 'production') {
   }
   https.createServer(httpsOptions, app)
     .listen(port, () => {
-      logger.info(`server started on port ${port} (${env})`);
+      const msg = `server started on port ${port} (https) (${env})`;
+      logger.info(msg);
+      console.log(msg);
     });
 }
 
