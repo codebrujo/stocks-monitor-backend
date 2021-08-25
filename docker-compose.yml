@@ -13,6 +13,6 @@ services:
     ports:
       - "3001:8080"
       - "5432:5432"
-    command: npm run devsrv
+    command: npm run server
     volumes:
       - .:/opt/stock-monitor-service-backend
