@@ -144,7 +144,11 @@ exports.fetchHistory = async (ticker, dateFrom, dateTill) => {
       url: historyURL,
     });
     const dataset = await response.data.history.data;
-    logger.info(`[moex.service.fetchHistory] for ${ticker}: ${historyURL} ${dataset}`);
+    logger.info(`[moex.service.fetchHistory] for ${ticker}:
+url:
+  ${historyURL}
+dataset:
+  ${dataset}`);
     return {
       ticker,
       values: dataset,

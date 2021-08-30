@@ -28,8 +28,27 @@ const isInitialized = () => {
  * @param {String} dateTill         По какую дату запрашивать
  */
 const fetchData = async (ticker, dateFrom, dateTill) => {
-  logger.info(`[stockHistory.fetchData]: fetching prices for ${ticker} from ${dateFrom} till ${dateTill}`);
-  sendMessage(DB_CONSUMER_ID, 'updateStockHistory', await fetchHistory(ticker, dateFrom, dateTill));
+  const diff = dateTill.diff(dateFrom, 'days');
+  const history = await fetchHistory(ticker, dateFrom.format('YYYY-MM-DD'), dateTill.format('YYYY-MM-DD'));
+  if (history.values.length > 0 && history.values.length < diff) {
+    const source = history.values[history.values.length - 1];
+    let startDate = moment(source[0]);
+    while (dateTill.diff(startDate, 'days') > 0) {
+      startDate = startDate.add(1, 'd');
+      const clonedArray = JSON.parse(JSON.stringify(source));
+      clonedArray[0] = startDate.format('YYYY-MM-DD');
+      clonedArray[1] = source[4];
+      clonedArray[2] = clonedArray[1];
+      clonedArray[3] = clonedArray[1];
+      clonedArray[4] = clonedArray[1];
+      clonedArray[5] = 0;
+      clonedArray[6] = 0;
+      history.values.push(clonedArray);
+    }
+  }
+  
+  
+  sendMessage(DB_CONSUMER_ID, 'updateStockHistory', history);
 };
 
 /**
@@ -40,12 +59,12 @@ const fetchData = async (ticker, dateFrom, dateTill) => {
  */
 const requestHistory = (params = { from: moment().add(-1, 'd'), days: 0, ticker: null }) => {
   if (!isInitialized()) {
-    logger.error('requestHistory: component must be initialized first');
+    logger.error('[requestHistory.stockHistory.component.worker]: component must be initialized first');
     return;
   }
   const { from, days, ticker } = params;
-  const dateTill = moment(from).format('YYYY-MM-DD');
-  const dateFrom = moment(from).add(-days, 'd').format('YYYY-MM-DD');
+  const dateTill = moment(from);
+  const dateFrom = moment(from).add(-days, 'd');
   if (ticker) {
     setTimeout(() => fetchData(ticker, dateFrom, dateTill), days * 1000);
   } else {
@@ -73,13 +92,13 @@ exports.handleStockArrayUpdate = (payload) => {
 exports.requestHistory = requestHistory;
 
 const initHistoryData = () => {
-  logger.info('[stockHistory.initHistoryData]: plan historical rates request for 0-100 days');
+  logger.info('[requestHistory.stockHistory.component.worker]: plan historical rates request for 0-100 days');
   requestHistory({ from: moment(), days: 100 });
-  logger.info('[stockHistory.initHistoryData]: plan historical rates request for 100-200 days');
+  logger.info('[requestHistory.stockHistory.component.worker]: plan historical rates request for 100-200 days');
   requestHistory({ from: moment().add(-100, 'd'), days: 100 });
-  logger.info('[stockHistory.initHistoryData]: plan historical rates request for 200-300 days');
+  logger.info('[requestHistory.stockHistory.component.worker]: plan historical rates request for 200-300 days');
   requestHistory({ from: moment().add(-200, 'd'), days: 100 });
-  logger.info('[stockHistory.initHistoryData]: plan historical rates request for 300-400 days');
+  logger.info('[requestHistory.stockHistory.component.worker]: plan historical rates request for 300-400 days');
   requestHistory({ from: moment().add(-300, 'd'), days: 100 });
 };
 

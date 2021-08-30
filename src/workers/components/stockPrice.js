@@ -14,6 +14,7 @@ const requestPrice = async () => {
     return;
   }
   const res = await fetchPrice();
+  //logger.info(`[stockPrice.component.worker] call. Price result: ${res}`);
   sendMessage(DB_CONSUMER_ID, 'updateStockPrice', res);
 };
 

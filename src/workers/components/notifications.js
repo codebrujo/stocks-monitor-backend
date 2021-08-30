@@ -11,3 +11,8 @@ exports.getLowPrice = (price, stock) => {
   const volatility = stock.volatility ? stock.volatility : DEFAULT_VOLATILITY;
   return parseFloat((price - price * volatility / 100).toFixed(getPrecision(price)));
 }
+
+exports.sendViaBlynk = (message, token) => {
+  const volatility = stock.volatility ? stock.volatility : DEFAULT_VOLATILITY;
+  return parseFloat((price - price * volatility / 100).toFixed(getPrecision(price)));
+}

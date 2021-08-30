@@ -89,7 +89,7 @@ const getNotifications = async (payload) => {
         message = `${value.ticker} DOWN TO ${element.dataValues.lowPrice}`;
       }
     }
-    //отправляем уведомление пользователю и удаляем оповещение
+    //send notification to user and update it
     if (message) {
       notifyUser(message, element.UserId);
       const payload = {
