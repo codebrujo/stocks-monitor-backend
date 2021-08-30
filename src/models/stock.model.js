@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { defaultVolatility } = require('../config/constants')
 /**
  * Stock Schema
  */
@@ -50,7 +51,8 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false,
   });
 
-  Stock.add = async (ticker, CompanyId, ratio) => {
+  Stock.add = async (ticker, CompanyId, ratio, paramVolatility) => {
+    const volatility = paramVolatility ? paramVolatility : defaultVolatility;
     if (!ticker) { return null; }
     const stock = await Stock.findOrCreate({
       where: {
@@ -64,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
         ratio,
         price: 0,
         multiplier: 1,
+        volatility,
         link: `https://invest.yandex.ru/catalog/stock/${ticker}/`
       }
     });

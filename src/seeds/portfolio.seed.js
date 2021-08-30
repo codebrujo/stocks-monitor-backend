@@ -3,7 +3,8 @@ const path = require('path');
 const moment = require('moment');
 const logger = require('../config/logger');
 const db = require('../models');
-const { User, Stock, PortfolioItem } = db;
+const { getAdjustment, getPrecision } = require('../utils/helpers');
+const { User, Stock, PortfolioItem, Notification } = db;
 
 const createPortfolioItem = async (item, user) => {
   const stock = await Stock.findOne({
@@ -23,10 +24,22 @@ const createPortfolioItem = async (item, user) => {
     },
     user,
     stock);
-  logger.info(`Ticker ${item.stock} added to user ${user.email}`);
+  const precision = getPrecision(+stock.price);
+  const adj = getAdjustment(+stock.price, +stock.volatility);
+  const highPrice = +(+stock.price + adj).toFixed(precision);
+  const lowPrice = +(+stock.price - adj).toFixed(precision);
+  Notification.addItem(
+    {
+      highPrice,
+      lowPrice,
+    },
+    user,
+    stock
+  );
+  logger.info(`Ticker ${item.stock} added to user ${user.email}, adjustment ${adj}, high price ${highPrice}, low price ${lowPrice}`);
 }
 
-exports.timeout = 80000;
+exports.timeout = 10000;
 
 exports.seed = async () => {
   let data;

@@ -13,6 +13,7 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET,
   jwtExpirationInterval: process.env.JWT_EXPIRATION_MINUTES,
   logs: process.env.NODE_ENV === 'production' ? 'combined' : 'dev',
+  defaultVolatility: 1.5,
   pgConfig: {
     db: process.env.POSTGRES_DB,
     port: process.env.POSTGRES_PORT,

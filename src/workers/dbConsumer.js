@@ -1,6 +1,7 @@
 const { workerData, parentPort } = require('worker_threads');
 const logger = require('../config/logger');
 const { EXTERNAL_CONSUMER_ID } = require('../config/constants').workersConfig;
+const { defaultVolatility } = require('../config/constants');
 const { getPrecision } = require('../utils/helpers');
 const { getHighPrice, getLowPrice } = require('./components/notifications');
 const moment = require('moment');
@@ -183,14 +184,20 @@ const fillInCompanyIds = async (list, ind = 0) => {
 
 
 const loadStockList = async (list) => {
-  logger.info(`${LOCAL_INSTANCE_ID} Loading stocks list`);
+  logger.info(`${LOCAL_INSTANCE_ID} Load stocks list`);
   const filledList = await fillInCompanyIds(list);
   const maxTurnover = filledList.reduce((initValue, item) => {
     return Math.max(initValue, item.monthlyTurnover);
   },
-    0);
+    1);
   filledList.map((item) => {
-    Stock.add(item.ticker, item.CompanyId, +(5 * item.monthlyTurnover / maxTurnover).toFixed(1));
+    let volatility = defaultVolatility;
+    if (item.monthlyTurnover > maxTurnover / 2) {
+      volatility = +(defaultVolatility / 3).toFixed(1);
+    } else if ((item.monthlyTurnover > maxTurnover / 3)) {
+      volatility = +(defaultVolatility / 2).toFixed(1);
+    }
+      Stock.add(item.ticker, item.CompanyId, +(5 * item.monthlyTurnover / maxTurnover).toFixed(1), volatility);
   });
 };
 
