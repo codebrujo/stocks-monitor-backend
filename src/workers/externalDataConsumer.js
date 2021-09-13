@@ -1,4 +1,5 @@
 const { workerData, parentPort } = require('worker_threads');
+const { updateBlynkPin } = require('./components/notifications');
 const logger = require('../config/logger');
 const LOCAL_INSTANCE_ID = workerData;
 
@@ -14,8 +15,9 @@ const sendMessage = async(recepientId, type, data) => {
 const notifyUser = async(payload) => {
     //TO DO
     logger.info(`${LOCAL_INSTANCE_ID} sending message: 
-    user: ${JSON.stringify(payload.user)} 
+    user: ${JSON.stringify(payload.user.dataValues)}
     message: ${payload.message}`);
+  updateBlynkPin(payload.user.dataValues.blynkToken, payload.message);
 };
 
 /**
@@ -23,7 +25,6 @@ const notifyUser = async(payload) => {
  * @private
  */
 const processMessageLocally = async (msg) => {
-    console.log('externalDataConsumer.worker processMessageLocally' + JSON.stringify(msg));
     switch (msg.type) {
         case 'notifyUser':
             notifyUser(msg.data);

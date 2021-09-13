@@ -22,8 +22,8 @@ module.exports = {
     passwd: process.env.POSTGRES_PASSWORD,
   },
   blynkNotifications: {
-    token: process.env.BLYNK_AUTH_TOKEN,
-    path: 'https://blynk-cloud.com/@token/notify',
+    notifyPath: 'http://blynk-cloud.com/@token/notify',
+    vpinPath: 'http://blynk-cloud.com/@token/update/V50',
     start_time: 10,
     end_time: 22,
   },

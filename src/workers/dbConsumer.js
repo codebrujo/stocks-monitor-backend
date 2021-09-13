@@ -75,7 +75,7 @@ const createNotifications = async () => {
   
 }
 
-const getNotifications = async (payload) => {
+const processNotifications = async (payload) => {
   const notifications = await Notification.findAll();
   notifications.forEach(element => {
     const value = payload.find(item => item.StockId === element.dataValues.StockId);
@@ -83,10 +83,10 @@ const getNotifications = async (payload) => {
     if (value) {
       //если произошло увеличение цены и новая цена превышает верхнюю границу уведомления
       if (value.price > value.prevprice && value.price >= element.dataValues.highPrice) {
-        message = `${value.ticker} UP TO ${element.dataValues.highPrice}`;
+        message = `${value.stock.ticker} UP TO ${element.dataValues.highPrice}`;
         //или произошло уменьшение цены и новая цена ниже нижней границы уведомления
       } else if (value.price < value.prevprice && value.price <= element.dataValues.lowPrice) {
-        message = `${value.ticker} DOWN TO ${element.dataValues.lowPrice}`;
+        message = `${value.stock.ticker} DOWN TO ${element.dataValues.lowPrice}`;
       }
     }
     //send notification to user and update it
@@ -119,7 +119,7 @@ const updateStockPrice = async (payload) => {
       processedList.push({ prevprice, price: value.price, StockId: element.id, stock: element });
     }
   });
-  getNotifications(processedList);
+  processNotifications(processedList);
 };
 
 const updateStockInfo = async (payload) => {
