@@ -1,4 +1,5 @@
 const axios = require("axios");
+const moment = require('moment');
 const { blynkNotifications } = require('../../config/constants');
 const { getPrecision } = require('../../utils/helpers');
 
@@ -20,12 +21,13 @@ exports.sendViaBlynk = (message, token) => {
 }
 
 exports.updateBlynkPin = (token, message) => {
+  const time = moment().format('kk:mm');
   axios({
     method: "put",
     url: blynkNotifications.vpinPath.replace('@token', token),
     headers: {
       'Content-Type': 'application/json',
     },
-    data: [message],
+    data: [`${time} ${message}`],
   });
 }
