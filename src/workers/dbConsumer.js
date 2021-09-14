@@ -103,6 +103,10 @@ const processNotifications = async (payload) => {
 };
 
 const updateStockPrice = async (payload) => {
+  if (!payload) {
+    logger.error('updateStockPrice recieved empty payload');
+    return;
+  }
   const processedList = [];
   const stocks = await Stock.findAll();
   stocks.forEach(element => {
