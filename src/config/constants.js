@@ -10,8 +10,13 @@ require('dotenv-safe').config({
 module.exports = {
   env: process.env.NODE_ENV,
   port: process.env.PORT,
+  protocol: process.env.EXPOSED_PROTOCOL,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpirationInterval: process.env.JWT_EXPIRATION_MINUTES,
+  certificateConfig: {
+    pemPath: process.env.CERT_PEM_PATH,
+    keyPath: process.env.CERT_KEY_PATH,
+  },
   logs: process.env.NODE_ENV === 'production' ? 'combined' : 'dev',
   defaultVolatility: 1.5,
   pgConfig: {
