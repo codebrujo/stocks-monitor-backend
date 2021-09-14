@@ -81,12 +81,16 @@ const processNotifications = async (payload) => {
     const value = payload.find(item => item.StockId === element.dataValues.StockId);
     let message = null;
     if (value) {
+      const precision = getPrecision(value.price);
+      let percentage = 0;
       //если произошло увеличение цены и новая цена превышает верхнюю границу уведомления
       if (value.price > value.prevprice && value.price >= element.dataValues.highPrice) {
-        message = `${value.stock.ticker} UP TO ${element.dataValues.highPrice}`;
+        percentage = ((value.price - value.prevprice) / value.prevprice * 100).toFixed(2);
+        message = `${value.stock.ticker} UP TO ${value.price.toFixed(precision)} ${percentage}%`;
         //или произошло уменьшение цены и новая цена ниже нижней границы уведомления
       } else if (value.price < value.prevprice && value.price <= element.dataValues.lowPrice) {
-        message = `${value.stock.ticker} DOWN TO ${element.dataValues.lowPrice}`;
+        percentage = ((value.prevprice - value.price) / value.prevprice * 100).toFixed(2);
+        message = `${value.stock.ticker} DOWN TO ${value.price.toFixed(precision)} -${percentage}%`;
       }
     }
     //send notification to user and update it
