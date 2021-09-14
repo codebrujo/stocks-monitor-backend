@@ -21,6 +21,7 @@ module.exports = {
     user: process.env.POSTGRES_USER,
     passwd: process.env.POSTGRES_PASSWORD,
   },
+  timeZone: process.env.TIME_ZONE_CORRECTION,
   blynkNotifications: {
     notifyPath: 'http://blynk-cloud.com/@token/notify',
     vpinPath: 'http://blynk-cloud.com/@token/update/V50',

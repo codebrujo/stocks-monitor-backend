@@ -1,6 +1,6 @@
 const axios = require("axios");
 const moment = require('moment');
-const { blynkNotifications } = require('../../config/constants');
+const { blynkNotifications, timeZone } = require('../../config/constants');
 const { getPrecision } = require('../../utils/helpers');
 
 const DEFAULT_VOLATILITY = 1.5;
@@ -21,7 +21,7 @@ exports.sendViaBlynk = (message, token) => {
 }
 
 exports.updateBlynkPin = (token, message) => {
-  const time = moment().format('kk:mm');
+  const time = moment().add(timeZone, 'h').format('kk:mm');
   axios({
     method: "put",
     url: blynkNotifications.vpinPath.replace('@token', token),
