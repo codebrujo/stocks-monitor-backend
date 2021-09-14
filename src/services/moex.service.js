@@ -126,6 +126,7 @@ exports.fetchPrice = async () => {
     });
   } catch (error) {
     logger.error(`[moex.service.fetchStockPrice] error ${error}`);
+    return [];
   }
 }
 

@@ -104,7 +104,9 @@ const processNotifications = async (payload) => {
 
 const updateStockPrice = async (payload) => {
   if (!payload) {
-    logger.error('updateStockPrice recieved empty payload');
+    if (typeof payload === 'undefined') {
+      logger.error('updateStockPrice recieved undefined payload');
+    }
     return;
   }
   const processedList = [];
